@@ -1,15 +1,21 @@
 import argparse
 import importlib
-import importlib.resources
 import os
 import random
 from shutil import copyfile
 import time
 
 # Plotman libraries
-from plotman import analyzer, archive, configuration, interactive, manager, plot_util, reporting
-from plotman import resources as plotman_resources
-from plotman.job import Job
+
+import job as joblib
+import analyzer
+import archive
+import configuration
+import interactive
+import manager
+import plot_util
+import reporting
+import resources as plotman_resources
 
 
 class PlotmanArgParser:
@@ -88,7 +94,7 @@ def get_term_width():
 
 def main():
     random.seed()
-
+    print("hello")
     pm_parser = PlotmanArgParser()
     args = pm_parser.parse_args()
 
@@ -120,7 +126,7 @@ def main():
 
             # Copy the default plotman.yaml (packaged in plotman/resources/) to the user's config file path,
             # creating the parent plotman file/directory if it does not yet exist
-            with importlib.resources.path(plotman_resources, "plotman.yaml") as default_config:
+            with "resources/plotman.yaml" as default_config:
                 config_dir = os.path.dirname(config_file_path)
 
                 os.makedirs(config_dir, exist_ok=True)
@@ -154,12 +160,12 @@ def main():
     # Analysis of completed jobs
     #
     elif args.cmd == 'analyze':
-
+        
         analyzer.analyze(args.logfile, args.clipterminals,
                 args.bytmp, args.bybitfield)
 
     else:
-        jobs = Job.get_running_jobs(cfg.directories.log)
+        jobs = joblib.Job.get_running_jobs(cfg.directories.log)
 
         # Status report
         if args.cmd == 'status':
@@ -180,7 +186,7 @@ def main():
                 if not firstit:
                     print('Sleeping 60s until next iteration...')
                     time.sleep(60)
-                    jobs = Job.get_running_jobs(cfg.directories.log)
+                    jobs = joblib.Job.get_running_jobs(cfg.directories.log)
                 firstit = False
 
                 archiving_status, log_message = archive.spawn_archive_process(cfg.directories, jobs)
@@ -248,3 +254,6 @@ def main():
                 elif args.cmd == 'resume':
                     print('Resuming ' + job.plot_id)
                     job.resume()
+
+if __name__ == "__main__":
+    main()

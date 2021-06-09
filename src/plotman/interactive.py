@@ -5,8 +5,8 @@ import math
 import os
 import subprocess
 
-from plotman import archive, configuration, manager, reporting
-from plotman.job import Job
+import archive, configuration, manager, reporting
+import job as joblib
 
 
 class TerminalTooSmallError(Exception):
@@ -85,7 +85,7 @@ def curses_main(stdscr):
     jobs_win = curses.newwin(1, 1, 1, 0)
     dirs_win = curses.newwin(1, 1, 1, 0)
 
-    jobs = Job.get_running_jobs(cfg.directories.log)
+    jobs = joblib.Job.get_running_jobs(cfg.directories.log)
     last_refresh = None
 
     pressed_key = ''   # For debugging
@@ -107,11 +107,11 @@ def curses_main(stdscr):
             do_full_refresh = elapsed >= cfg.scheduling.polling_time_s
 
         if not do_full_refresh:
-            jobs = Job.get_running_jobs(cfg.directories.log, cached_jobs=jobs)
+            jobs = joblib.Job.get_running_jobs(cfg.directories.log, cached_jobs=jobs)
 
         else:
             last_refresh = datetime.datetime.now()
-            jobs = Job.get_running_jobs(cfg.directories.log)
+            jobs = joblib.Job.get_running_jobs(cfg.directories.log)
 
             if plotting_active:
                 (started, msg) = manager.maybe_start_new_plot(
@@ -123,7 +123,7 @@ def curses_main(stdscr):
                         aging_reason = None
                     log.log(msg)
                     plotting_status = '<just started job>'
-                    jobs = Job.get_running_jobs(cfg.directories.log, cached_jobs=jobs)
+                    jobs = joblib.Job.get_running_jobs(cfg.directories.log, cached_jobs=jobs)
                 else:
                     # If a plot is delayed for any reason other than stagger, log it
                     if msg.find("stagger") < 0:

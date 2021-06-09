@@ -17,7 +17,7 @@ import click
 import pendulum
 import psutil
 
-from plotman import chia
+import chia
 
 
 def job_phases_for_tmpdir(d, all_jobs):

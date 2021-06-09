@@ -5,7 +5,7 @@ import sys
 
 import texttable as tt
 
-from plotman import plot_util
+import plot_util
 
 
 def analyze(logfilenames, clipterminals, bytmp, bybitfield):

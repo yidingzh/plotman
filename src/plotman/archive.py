@@ -11,7 +11,7 @@ from datetime import datetime
 import psutil
 import texttable as tt
 
-from plotman import job, manager, plot_util
+import job, manager, plot_util
 
 # TODO : write-protect and delete-protect archived plots
 

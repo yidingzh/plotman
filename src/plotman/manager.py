@@ -13,9 +13,9 @@ import pendulum
 import psutil
 
 # Plotman libraries
-from plotman import \
+import \
     archive  # for get_archdir_freebytes(). TODO: move to avoid import loop
-from plotman import job, plot_util
+import job, plot_util
 
 # Constants
 MIN = 60    # Seconds
@@ -158,14 +158,14 @@ def maybe_start_new_plot(dir_cfg, sched_cfg, plotting_cfg):
             # of the log file will get closed explicitly while still
             # allowing handling of just the log file opening error.
 
-            with open_log_file:
+            #with open_log_file:
                 # start_new_sessions to make the job independent of this controlling tty.
-                p = subprocess.Popen(plot_args,
-                    stdout=open_log_file,
-                    stderr=subprocess.STDOUT,
-                    start_new_session=True)
+                #p = subprocess.Popen(plot_args,
+                #    stdout=open_log_file,
+                #    stderr=subprocess.STDOUT,
+                #    start_new_session=True)
 
-            psutil.Process(p.pid).nice(15)
+            #psutil.Process(p.pid).nice(15)
             return (True, logmsg)
 
     return (False, wait_reason)
